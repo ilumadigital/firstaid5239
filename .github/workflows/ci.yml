@@ -1,16 +1,38 @@
-name: Validate Firstaid5239
+name: Validate and Publish Firstaid5239
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+permissions:
+  contents: write
+
 jobs:
-  build-and-test:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Syntax, static build and backend tests
+
+      - name: Build static HTML and test site + email handler
         run: npm run check
+
+      - name: Publish build to repository root for static hosting
+        if: github.event_name == 'push'
+        run: |
+          cp -R dist/. .
+          git add -- index.html styles.css sections.css mobile.css script.js favicon.svg og-cover.svg hero-art.svg privacy.html robots.txt sitemap.xml llms.txt llms-full.txt faq.md site.webmanifest
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "build: publish compiled site to web root [skip ci]"
+            git push origin HEAD:main
+          fi
