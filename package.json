@@ -1,0 +1,14 @@
+{
+  "name": "firstaid5239",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check api/contact.cjs && node --check public/script.js && node build.mjs && node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
