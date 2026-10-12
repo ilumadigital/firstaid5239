@@ -98,7 +98,7 @@
 
 <section class="section contact-section" id="epikoinonia"><div class="wrap contact-grid"><div class="contact-copy"><p class="eyebrow eyebrow-light"><span class="eyebrow-bar"></span> 07 / ΕΠΙΚΟΙΝΩΝΙΑ</p><h2>Ας οργανώσουμε<br><em>την εκπαίδευσή σας.</em></h2><p>Στείλτε τα στοιχεία της επιχείρησής σας. Η ΕΝΑΚ θα επικοινωνήσει μαζί σας για μια προσαρμοσμένη πρόταση εκπαίδευσης πρώτων βοηθειών.</p><div class="contact-options"><a href="tel:+302109575470"><span class="contact-symbol">↗</span><span><small>ΤΗΛΕΦΩΝΟ</small><strong>210 9575 470</strong></span></a><a href="mailto:info@enak.gr"><span class="contact-symbol">@</span><span><small>EMAIL</small><strong>info@enak.gr</strong></span></a><div><span class="contact-symbol">⌖</span><span><small>ΔΙΕΥΘΥΝΣΗ</small><strong>Μαντζαγριωτάκη 72, Καλλιθέα</strong></span></div></div></div>
 <div class="form-panel"><div class="form-top"><span>ΑΙΤΗΜΑ ΠΡΟΣΦΟΡΑΣ</span><span>01 / 01</span></div><h3>Πείτε μας λίγα για<br>την επιχείρησή σας.</h3>
-<form id="contact-form" method="post" action="/api/contact" novalidate><div class="fields">
+<form id="contact-form" data-lead-form method="post" action="/api/contact" novalidate><div class="fields">
 <div class="field full"><label for="company">Επωνυμία επιχείρησης *</label><input id="company" name="company" type="text" required maxlength="140" autocomplete="organization" placeholder="Επωνυμία εταιρείας"></div>
 <div class="field"><label for="fullname">Ονοματεπώνυμο *</label><input id="fullname" name="name" type="text" required maxlength="100" autocomplete="name" placeholder="Το όνομά σας"></div>
 <div class="field"><label for="role">Θέση / Τμήμα</label><input id="role" name="role" type="text" maxlength="100" placeholder="π.χ. HR / HSE"></div>
@@ -111,9 +111,9 @@
 <div class="honey" aria-hidden="true"><label for="website">Αφήστε το κενό</label><input id="website" name="website" type="text" autocomplete="off" tabindex="-1"></div>
 <input id="started-at" type="hidden" name="startedAt" value="">
 <label class="privacy-consent"><input name="privacyAccepted" id="privacyAccepted" type="checkbox" required value="yes"><span>Έλαβα γνώση της <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Πολιτικής Απορρήτου</a> και ζητώ επικοινωνία για το αίτημά μου. *</span></label>
-<button id="submit-button" type="submit" class="btn btn-red submit-btn"><span>Αποστολή αιτήματος</span><span>↗</span></button>
-<div id="form-status" class="form-status" role="status" aria-live="polite"></div>
+<button id="submit-button" type="submit" class="btn btn-red submit-btn" data-form-submit><span>Αποστολή αιτήματος</span><span>↗</span></button>
+<div id="form-status" class="form-status" data-form-status role="status" aria-live="polite"></div>
 <p class="form-footnote">Με επιτυχή αποστολή θα λάβετε email επιβεβαίωσης. Τα πεδία με * είναι υποχρεωτικά.</p>
 </form></div></div></section></main>
-<footer class="footer"><div class="wrap footer-main"><a href="#top" class="footer-brand">ΕΝΑΚ<span>.</span></a><p>Πρώτες βοήθειες με γνώση και ευθύνη.</p><a href="#top">Πίσω στην κορυφή ↑</a></div><div class="wrap footer-base"><span>© 2026 ΕΝΑΚ · Firstaid5239.gr</span><div><a href="/privacy.html">Πολιτική Απορρήτου</a><a href="https://enak.gr/" target="_blank" rel="noopener noreferrer">enak.gr ↗</a><a href="https://www.elinyae.gr/ethniki-nomothesia/n-52392025-fek-178a-20102025" target="_blank" rel="noopener noreferrer">Ν. 5239/2025 ↗</a></div></div></footer>
+<footer class="footer"><div class="wrap footer-main"><a href="#top" class="footer-logo-link" aria-label="ΕΝΑΚ – Πίσω στην αρχική"><img src="/enak-logo.png" class="footer-enak-logo" width="400" height="400" alt="ΕΝΑΚ – Ελληνική Ναυαγοσωστική Ακαδημία" loading="lazy"><span class="footer-logo-text">ΕΛΛΗΝΙΚΗ ΝΑΥΑΓΟΣΩΣΤΙΚΗ<br>ΑΚΑΔΗΜΙΑ</span></a><p>Πρώτες βοήθειες με γνώση και ευθύνη.</p><a href="#top">Πίσω στην κορυφή ↑</a></div><div class="wrap footer-base"><span>© 2026 ΕΝΑΚ · Firstaid5239.gr</span><div><a href="/privacy.html">Πολιτική Απορρήτου</a><a href="https://enak.gr/" target="_blank" rel="noopener noreferrer">enak.gr ↗</a><a href="https://www.elinyae.gr/ethniki-nomothesia/n-52392025-fek-178a-20102025" target="_blank" rel="noopener noreferrer">Ν. 5239/2025 ↗</a></div></div></footer>
 <a href="#epikoinonia" class="mobile-cta">Ζητήστε προσφορά ↗</a></body></html>
