@@ -19,30 +19,41 @@ function updateCalc(){
  }
 }
 if(calc){calc.addEventListener('submit',e=>{e.preventDefault();updateCalc();});count.addEventListener('input',updateCalc);updateCalc();}
-document.querySelectorAll('[data-program]').forEach(link=>link.addEventListener('click',()=>{const select=$('program');if(select)select.value=link.dataset.program;}));
-const form=$('contact-form'),status=$('form-status'),button=$('submit-button');
-const stamp=$('started-at');if(stamp)stamp.value=String(Date.now());
-if(form){
+document.querySelectorAll('[data-program]').forEach(link=>link.addEventListener('click',()=>{document.querySelectorAll('select[name="program"]').forEach(select=>{select.value=link.dataset.program;});}));
+// Both lead forms use the same validated serverless endpoint and independent state.
+document.querySelectorAll('form[data-lead-form]').forEach(form=>{
+ const status=form.querySelector('[data-form-status]');
+ const button=form.querySelector('[data-form-submit]');
+ const label=button?.querySelector('span');
+ const initialLabel=label?.textContent||'Αποστολή αιτήματος';
+ const stamp=form.querySelector('input[name="startedAt"]');
+ const consent=form.querySelector('input[name="privacyAccepted"]');
+ if(stamp)stamp.value=String(Date.now());
  form.addEventListener('submit',async e=>{
   e.preventDefault();
+  if(!status||!button)return;
   status.textContent='';status.classList.remove('error');
   if(!form.reportValidity())return;
   const fields=Object.fromEntries(new FormData(form).entries());
-  fields.privacyAccepted=$('privacyAccepted')?.checked===true;
-  if(!fields.privacyAccepted){status.classList.add('error');status.textContent='Απαιτείται ενημέρωση για την Πολιτική Απορρήτου.';return;}
-  button.disabled=true;button.querySelector('span').textContent='Γίνεται αποστολή…';form.setAttribute('aria-busy','true');
+  fields.privacyAccepted=consent?.checked===true;
+  if(!fields.privacyAccepted){status.classList.add('error');status.textContent='Παρακαλούμε διαβάστε την Πολιτική Απορρήτου και επιβεβαιώστε την ενημέρωση.';return;}
+  button.disabled=true;if(label)label.textContent='Γίνεται αποστολή…';form.setAttribute('aria-busy','true');
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),20000);
   try{
    const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(fields),signal:controller.signal,credentials:'same-origin'});
    const result=await response.json().catch(()=>({}));
-   if(!response.ok||!result.ok)throw new Error(result.message||'Δεν ήταν δυνατή η αποστολή. Δοκιμάστε ξανά ή καλέστε στο 210 9575 470.');
-   status.textContent='Το αίτημά σας καταχωρίστηκε για αποστολή. Στείλαμε ενημέρωση στην ΕΝΑΚ και επιβεβαίωση στο email σας. Ελέγξτε και τα ανεπιθύμητα.';
+   if(!response.ok||!result.ok)throw new Error(result.message||'Δεν ολοκληρώθηκε η αποστολή. Παρακαλούμε δοκιμάστε ξανά ή καλέστε στο 210 9575 470.');
+   status.textContent='Ευχαριστούμε! Το αίτημά σας έγινε αποδεκτό για αποστολή στην ΕΝΑΚ και στο email σας. Ελέγξτε και τα ανεπιθύμητα.';
    form.reset();if(stamp)stamp.value=String(Date.now());
-   status.scrollIntoView({block:'nearest',behavior:'smooth'});
+   status.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   }catch(err){
    status.classList.add('error');
-   status.textContent=err.name==='AbortError'?'Η αποστολή καθυστέρησε. Επικοινωνήστε στο info@enak.gr για επιβεβαίωση πριν υποβάλετε ξανά.':(err.message||'Αποτυχία αποστολής. Δοκιμάστε ξανά.');
-  }finally{clearTimeout(timeout);button.disabled=false;button.querySelector('span').textContent='Αποστολή αιτήματος';form.removeAttribute('aria-busy');}
+   status.textContent=err.name==='AbortError'
+    ?'Η αποστολή καθυστέρησε. Επικοινωνήστε στο info@enak.gr για επιβεβαίωση πριν υποβάλετε ξανά.'
+    :(err.message||'Αποτυχία αποστολής. Δοκιμάστε ξανά.');
+  }finally{
+   clearTimeout(timeout);button.disabled=false;if(label)label.textContent=initialLabel;form.removeAttribute('aria-busy');
+  }
  });
-}
+});
 })();
