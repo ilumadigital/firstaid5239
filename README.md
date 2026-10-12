@@ -1,5 +1,13 @@
 # Firstaid5239.gr — ΕΝΑΚ / Νόμος 5239/2025
 
+## Branding και lead capture (έκδοση 12/10/2026)
+
+- **Επίσημο logo ΕΝΑΚ:** `public/enak-logo.png`, προέλευση `https://enak.gr/wp-content/uploads/2024/03/ENAK.png`, αντιγραμμένο τοπικά και δημοσιευμένο στο `/enak-logo.png`. Χρησιμοποιείται στο header, footer, favicon, privacy page, Open Graph metadata και Organization Schema.
+- **Γραμματοσειρά:** `Google Sans Flex` από Google Fonts με `Noto Sans` ως εφεδρική για ελληνικούς χαρακτήρες που ενδέχεται να μην υποστηρίζονται από την Google Sans Flex. Καθολική εφαρμογή σε σώμα, τίτλους, πεδία και κουμπιά.
+- **Δύο φόρμες:** κύρια φόρμα προσφοράς στο hero (above the fold) και πλήρης φόρμα στο τέλος. Και οι δύο έχουν ξεχωριστά IDs/μηνύματα, ίδια validation, GDPR checkbox, honeypot και τον ίδιο `POST /api/contact` μηχανισμό διπλής ειδοποίησης.
+- Το workflow κατεβάζει την αυθεντική εικόνα από enak.gr μόνο αν λείπει το `public/enak-logo.png`. Το GitHub Actions κάνει build/test και δημοσιεύει τον τελικό HTML/CSS/JS και την εικόνα στη ρίζα του repository για static hosting. Για λειτουργική αποστολή email χρειάζεται ενεργός Vercel/serverless provider και ρυθμισμένο Resend.
+
+
 Πλήρες responsive μονοσέλιδο marketing + legal explainer website για εκπαίδευση πρώτων βοηθειών επιχειρήσεων. Βασίζεται στο **άρθρο 39 του Ν. 5239/2025** και στην **έναρξη ισχύος από 01.01.2026** (άρθρο 103 παρ. 2). Το site παρέχει δύο νομικές κατηγορίες προσωπικού, calculator, προγράμματα ΕΝΑΚ, 18 FAQ, schema.org graph, llms.txt/llms-full.txt, sitemap, robots, privacy policy και φόρμα προσφοράς.
 
 ## Τεχνολογία
