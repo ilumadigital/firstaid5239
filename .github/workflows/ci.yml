@@ -22,6 +22,21 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Download verified official ENAK main logo
+        run: |
+          if [ ! -s public/enak-logo.png ]; then
+            curl --fail --location --silent --show-error --retry 2 --max-time 40 \
+              "https://enak.gr/wp-content/uploads/2024/03/ENAK.png" \
+              --output public/enak-logo.png
+          fi
+          python3 - <<'PY'
+          from pathlib import Path
+          logo = Path('public/enak-logo.png').read_bytes()
+          assert logo.startswith(b'\\x89PNG\\r\\n\\x1a\\n'.decode('unicode_escape').encode('latin1')) or logo[:8] == bytes((137,80,78,71,13,10,26,10)), 'ENAK official asset must be a PNG image'
+          assert len(logo) > 1000, 'ENAK logo was not downloaded correctly'
+          print('Official ENAK logo verified:',len(logo),'bytes')
+          PY
+
       - name: Build static HTML and test site + email handler
         run: npm run check
 
@@ -36,29 +51,11 @@ jobs:
           echo '==== WWW HTTPS HEAD ===='
           curl -sSL -I --connect-timeout 10 --max-time 20 https://www.firstaid5239.gr/ | head -25 || true
 
-      - name: Inspect official ENAK logo URLs (informational)
-        if: github.event_name == 'push'
-        continue-on-error: true
-        run: |
-          python3 - <<'PY'
-          import urllib.request,re
-          for site in ('https://enak.gr/','https://enak.gr/info/'):
-              try:
-                  req=urllib.request.Request(site,headers={'User-Agent':'Mozilla/5.0 (compatible; Firstaid5239BrandAudit/1.0)'})
-                  html=urllib.request.urlopen(req,timeout=15).read().decode('utf-8','ignore')
-                  print('SITE',site,'LEN',len(html))
-                  for m in re.finditer(r'<(?:img|link)[^>]+>',html,re.I):
-                      tag=m.group(0)
-                      if any(t in tag.lower() for t in ('logo','custom-logo','site-logo','favicon','apple-touch-icon')):
-                          print('ASSET',tag[:650])
-              except Exception as e:print('ENAK AUDIT ERROR',site,type(e).__name__,str(e)[:200])
-          PY
-
       - name: Publish build to repository root for static hosting
         if: github.event_name == 'push'
         run: |
           cp -R dist/. .
-          git add -- index.html styles.css sections.css mobile.css script.js favicon.svg og-cover.svg hero-art.svg privacy.html robots.txt sitemap.xml llms.txt llms-full.txt faq.md site.webmanifest
+          git add -- index.html styles.css sections.css mobile.css hero-form.css script.js enak-logo.png public/enak-logo.png favicon.svg og-cover.svg hero-art.svg privacy.html robots.txt sitemap.xml llms.txt llms-full.txt faq.md site.webmanifest
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
