@@ -27,7 +27,8 @@ test('generated static HTML matches FAQs and schema',async()=>{
  assert.ok(mainCss.includes("font-family:'Google Sans Flex'"), 'Google Sans Flex applied to the whole site');
  const officialLogo=await readFile('dist/enak-logo.png');
  assert.deepEqual([...officialLogo.subarray(0,8)],[137,80,78,71,13,10,26,10], 'official ENAK logo is PNG');
- const ids=[...html.matchAll(/\\bid="([^"]+)"/g)].map(m=>m[1]);
+ const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+ assert.ok(ids.length>20, 'expected a complete page with distinct input IDs');
  assert.equal(new Set(ids).size,ids.length,'HTML IDs must remain unique with two forms');
  assert.ok(html.includes('https://firstaid5239.gr/'));
  assert.ok(html.includes('ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ'));
