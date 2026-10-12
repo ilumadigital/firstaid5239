@@ -1,0 +1,38 @@
+/* Official ENAK visual identity and above-the-fold conversion form */
+.logo.logo-official{gap:11px;align-items:center;min-width:0}
+.enak-logo{display:block;width:63px;height:63px;object-fit:contain;flex-shrink:0}
+.logo-caption{font-size:10px;font-weight:850;letter-spacing:.09em;line-height:1.55;color:#3c4c56;max-width:155px}
+.hero-grid{grid-template-columns:minmax(0,1.04fr) minmax(390px,.96fr);gap:55px;min-height:0;padding:66px 0 56px;align-items:center}
+.hero h1{font-size:clamp(42px,4.5vw,63px);max-width:650px}
+.hero-description{font-size:14px;line-height:1.8}
+.hero-credentials{margin-top:45px}
+.hero-form-holder{width:100%;min-width:0}
+.hero-form-card{position:relative;background:#f8f9f8;color:#152532;border-radius:10px;padding:30px 31px 26px;box-shadow:0 26px 78px rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.18)}
+.hero-form-card:before{content:"";position:absolute;inset:0 0 auto;height:5px;border-radius:10px 10px 0 0;background:var(--red)}
+.hero-form-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}
+.hero-form-eyebrow{display:flex;align-items:center;font-size:9px;color:#d9333a;font-weight:900;letter-spacing:.09em}
+.hero-form-eyebrow .pulse{width:6px;height:6px;margin-right:9px}
+.hero-form-corner{color:#88949d;font-size:10px;font-weight:850;white-space:nowrap}
+.hero-form-card h2{font-size:clamp(25px,2.5vw,33px);line-height:1.12;letter-spacing:-.055em;margin:0 0 10px;color:#142635}
+.hero-form-card h2 em{color:var(--red);font-style:normal}
+.hero-form-description{font-size:11px;line-height:1.6;color:#778792;margin:0 0 20px}
+.hero-form-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 13px}
+.hero-form-grid .field.full{grid-column:1/-1}
+.hero-form-card .field label{font-size:10px;margin-bottom:6px;color:#344954}
+.hero-form-card .field input,.hero-form-card .field select,.hero-form-card .field textarea{background:#fff;border:1px solid #d9e0e2;min-height:41px;padding:10px 11px;font-size:11px;color:#1c2c37;border-radius:4px}
+.hero-form-card .field textarea{min-height:55px;max-height:150px}
+.hero-form-card .privacy-consent{font-size:10px;line-height:1.6;margin:16px 0 15px}
+.hero-form-card .submit-btn{min-height:49px;padding:14px 16px;font-size:12px}
+.hero-form-note{font-size:10px;color:#85939c;text-align:center;line-height:1.6;margin:13px 0 0}
+.hero-form-card .form-status:not(:empty){margin-top:12px}
+.footer-logo-link{display:flex;align-items:center;gap:15px}
+.footer-enak-logo{width:68px;height:68px;object-fit:contain}
+.footer-logo-text{font-size:11px;letter-spacing:.1em;font-weight:800;color:#d7e0e5}
+.privacy-header-logo{width:57px;height:57px;object-fit:contain}
+@media(max-width:1100px){
+ .hero-grid{grid-template-columns:minmax(0,1fr) minmax(370px,1fr);gap:22px}
+ .hero h1{font-size:clamp(40px,4.2vw,54px)}
+ .hero-form-card{padding:28px 24px 25px}
+ .logo-caption{font-size:9px;max-width:132px}
+ .enak-logo{height:57px;width:57px}
+}
