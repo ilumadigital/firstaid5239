@@ -17,6 +17,18 @@ test('generated static HTML matches FAQs and schema',async()=>{
  assert.equal((html.match(/class="faq-item"/g)||[]).length,faqs.length);
  for(const path of ['dist/styles.css','dist/sections.css','dist/mobile.css','dist/script.js','dist/robots.txt','dist/sitemap.xml','dist/llms.txt','dist/llms-full.txt','dist/faq.md','dist/privacy.html','dist/hero-art.svg'])assert.ok((await readFile(path)).length>20,path);
  for(const name of ['company','name','email','phone','privacyAccepted','startedAt'])assert.ok(html.includes('name="'+name+'"'),name);
+ assert.ok(html.includes('Google+Sans+Flex'), 'Google Sans Flex is loaded');
+ assert.equal((html.match(/data-lead-form/g)||[]).length,2,'hero and contact forms both exist');
+ assert.ok(html.includes('id="hero-contact-form"'), 'lead form is inside hero');
+ assert.ok(html.indexOf('id="hero-contact-form"')<html.indexOf('<section class="stats">'), 'lead form must render above the fold');
+ assert.ok(html.includes('src="/enak-logo.png"'), 'official ENAK brand is used');
+ assert.equal(json['@graph'].find(n=>n['@type']==='Organization').logo.url,'https://firstaid5239.gr/enak-logo.png');
+ const mainCss=await readFile('dist/styles.css','utf8');
+ assert.ok(mainCss.includes("font-family:'Google Sans Flex'"), 'Google Sans Flex applied to the whole site');
+ const officialLogo=await readFile('dist/enak-logo.png');
+ assert.deepEqual([...officialLogo.subarray(0,8)],[137,80,78,71,13,10,26,10], 'official ENAK logo is PNG');
+ const ids=[...html.matchAll(/\\bid="([^"]+)"/g)].map(m=>m[1]);
+ assert.equal(new Set(ids).size,ids.length,'HTML IDs must remain unique with two forms');
  assert.ok(html.includes('https://firstaid5239.gr/'));
  assert.ok(html.includes('ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ'));
  assert.ok(!html.includes('<!--FAQ_ITEMS-->'));
