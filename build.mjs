@@ -21,4 +21,6 @@ if(html.includes('<!--FAQ_ITEMS-->')||html.includes('<!--STRUCTURED_DATA-->')||!
 await mkdir(dir,{recursive:true});
 await writeFile(path.join(dir,'index.html'),html);
 await cp('public',dir,{recursive:true});
+const faqDoc=['# Συχνές ερωτήσεις: Ν. 5239/2025, άρθρο 39 — ΕΝΑΚ','','Πηγή: https://firstaid5239.gr/#faq','Νομοθεσία: https://www.elinyae.gr/ethniki-nomothesia/n-52392025-fek-178a-20102025','Ενημέρωση: 12/10/2026','','## FAQ',...faq.flatMap(([q,a])=>['','### '+q,'',a])].join('\n')+'\n';
+await writeFile(path.join(dir,'faq.md'),faqDoc);
 console.log('Built dist/index.html with '+faq.length+' FAQs, '+graph.length+' schema graph nodes.');
