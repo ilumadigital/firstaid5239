@@ -25,6 +25,17 @@ jobs:
       - name: Build static HTML and test site + email handler
         run: npm run check
 
+      - name: Check live domain DNS and HTTP status (informational)
+        if: github.event_name == 'push'
+        continue-on-error: true
+        run: |
+          echo '==== DNS A ===='
+          getent ahostsv4 firstaid5239.gr | head -6 || true
+          echo '==== HTTPS HEAD ===='
+          curl -sSL -I --connect-timeout 10 --max-time 20 https://firstaid5239.gr/ | head -35 || true
+          echo '==== WWW HTTPS HEAD ===='
+          curl -sSL -I --connect-timeout 10 --max-time 20 https://www.firstaid5239.gr/ | head -25 || true
+
       - name: Publish build to repository root for static hosting
         if: github.event_name == 'push'
         run: |
