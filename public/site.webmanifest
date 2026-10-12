@@ -1,0 +1,17 @@
+{
+  "name": "Firstaid5239.gr | ΕΝΑΚ",
+  "short_name": "Firstaid5239",
+  "lang": "el",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121c27",
+  "theme_color": "#121c27",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
