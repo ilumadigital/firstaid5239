@@ -18,7 +18,7 @@ test('generated static HTML matches FAQs and schema',async()=>{
  for(const path of ['dist/styles.css','dist/sections.css','dist/mobile.css','dist/script.js','dist/robots.txt','dist/sitemap.xml','dist/llms.txt','dist/llms-full.txt','dist/faq.md','dist/privacy.html','dist/hero-art.svg'])assert.ok((await readFile(path)).length>20,path);
  for(const name of ['company','name','email','phone','privacyAccepted','startedAt'])assert.ok(html.includes('name="'+name+'"'),name);
  assert.ok(html.includes('https://firstaid5239.gr/'));
- assert.ok(html.includes('Συχνές'));
+ assert.ok(html.includes('ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ'));
  assert.ok(!html.includes('<!--FAQ_ITEMS-->'));
 });
 
