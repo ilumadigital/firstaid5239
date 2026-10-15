@@ -1,0 +1,7 @@
+Options -Indexes
+RewriteEngine On
+RewriteRule ^contact/?$ contact.php [L,QSA]
+RewriteRule ^config/?$ config.php [L,QSA]
+<Files "_bootstrap.php">
+  Require all denied
+</Files>
