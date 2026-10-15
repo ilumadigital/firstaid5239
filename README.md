@@ -18,6 +18,23 @@
 - Vercel Serverless API `/api/contact`, χρήση του Resend Batch API για **δύο emails σε μία αποδεκτή παρτίδα** (ΕΝΑΚ + πελάτης). Ο κώδικας βρίσκεται σε `api/contact.cjs` και το Vercel entrypoint σε `api/contact.js`.
 - `npm run build`, `npm run test` (μετά το build), `npm run check` (syntax + build + tests).
 
+## Αποστολή μέσω Hostinger SMTP (προτεινόμενη)
+
+Το `/api/contact` υποστηρίζει SMTP μέσω Nodemailer και χρησιμοποιεί την Hostinger, όταν έχουν οριστεί οι μεταβλητές `SMTP_USER` και `SMTP_PASSWORD`. Οι μεταβλητές μπαίνουν **μόνο στο Vercel → Project → Settings → Environment Variables**, ποτέ στο GitHub, σε client-side JS ή σε αρχεία `.env` που γίνονται commit.
+
+| Variable | Value |
+| --- | --- |
+| `SMTP_HOST` | `smtp.hostinger.com` |
+| `SMTP_PORT` | `465` |
+| `SMTP_USER` | `info@enak.gr` |
+| `SMTP_PASSWORD` | Το νέο password του mailbox (secret) |
+| `MAIL_FROM` | `info@enak.gr` |
+| `MAIL_TO` | `info@enak.gr` |
+
+Μετά την αποθήκευση των μεταβλητών, κάντε Redeploy του production deployment. Η πρώτη αποστολή είναι το αίτημα προς ΕΝΑΚ με Reply-To τον ενδιαφερόμενο, η δεύτερη είναι η επιβεβαίωση στον ενδιαφερόμενο. Τα credentials δεν εκτίθενται στον browser. Το SMTP είναι προεπιλεγμένο όταν υπάρχουν τα δύο secrets· αλλιώς παραμένει η παλαιά ενσωμάτωση Resend.
+
+**Ασφάλεια:** Αλλάξτε τον κωδικό του mailbox αν δημοσιοποιήθηκε ή μοιράστηκε σε συνομιλία. Χρησιμοποιήστε τον νέο κωδικό αποκλειστικά σε ασφαλές secret storage. Μην υποθέσετε ότι η επιτυχία στην κλήση SMTP εγγυάται τελική παράδοση στο Inbox· ελέγξτε και spam/SMTP logs.
+
 ## Δημοσίευση στο Vercel
 
 1. Στο Vercel, **Add New Project → Import** από GitHub `ilumadigital/firstaid5239`.
