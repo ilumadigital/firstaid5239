@@ -122,11 +122,31 @@ $smtpPassword = appEnv('SMTP_PASSWORD');
 $from = appEnv('MAIL_FROM', $smtpUser);
 $to = appEnv('MAIL_TO', 'info@enak.gr');
 $vendorPath = dirname(__DIR__, 2) . '/vendor/autoload.php';
-if ($smtpHost === '' || !in_array($smtpPort, [465, 587], true)
-    || $smtpUser === '' || $smtpPassword === ''
-    || !filter_var($from, FILTER_VALIDATE_EMAIL) || !filter_var($to, FILTER_VALIDATE_EMAIL)
-    || !is_file($vendorPath)) {
-    error_log('Firstaid5239: private SMTP or PHPMailer setup is incomplete');
+$configurationIssues = [];
+if ($smtpHost === '') {
+    $configurationIssues[] = 'SMTP_HOST missing';
+}
+if (!in_array($smtpPort, [465, 587], true)) {
+    $configurationIssues[] = 'SMTP_PORT invalid (expected 465 or 587)';
+}
+if ($smtpUser === '') {
+    $configurationIssues[] = 'SMTP_USER missing';
+}
+if ($smtpPassword === '') {
+    $configurationIssues[] = 'SMTP_PASSWORD missing';
+}
+if (!filter_var($from, FILTER_VALIDATE_EMAIL)) {
+    $configurationIssues[] = 'MAIL_FROM invalid';
+}
+if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+    $configurationIssues[] = 'MAIL_TO invalid';
+}
+if (!is_file($vendorPath)) {
+    $configurationIssues[] = 'PHPMailer vendor/autoload.php missing outside public_html';
+}
+if ($configurationIssues !== []) {
+    // Private PHP error log only: never echo configuration state, passwords or filesystem paths.
+    error_log('Firstaid5239 setup: ' . implode('; ', $configurationIssues));
     sendJson(503, ['ok' => false, 'message' => 'Η υπηρεσία email δεν είναι ακόμη διαθέσιμη. Καλέστε στο 210 9575 470.']);
 }
 require_once $vendorPath;
