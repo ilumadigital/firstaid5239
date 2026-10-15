@@ -45,7 +45,7 @@ function fieldValue(array $data, string $key, int $max): string
     if (strlen($value) > $max * 4 || !preg_match('//u', $value)) {
         sendJson(422, ['ok' => false, 'message' => 'Μη έγκυρα στοιχεία φόρμας.']);
     }
-    if ((function_exists('mb_strlen') ? mb_strlen($value, 'UTF-8') : strlen($value)) > $max) {
+    if ((function_exists('mb_strlen') ? mb_strlen($value, 'UTF-8') : preg_match_all('/./us', $value)) > $max) {
         sendJson(422, ['ok' => false, 'message' => 'Μη έγκυρα στοιχεία φόρμας.']);
     }
     return $value;
