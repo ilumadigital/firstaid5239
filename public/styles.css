@@ -361,3 +361,7 @@ p{line-height:1.72}strong{font-weight:700}
  html{scroll-behavior:auto}
  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
+/* Cloudflare Turnstile uses the same calm form rhythm in hero and contact section. */
+.turnstile-container{width:100%;min-height:65px;margin:15px 0 10px;overflow:hidden}
+.turnstile-container iframe{max-width:100%}
