@@ -52,6 +52,7 @@ async function loadTurnstile(){
   consent.before(holder);
   const id=window.turnstile.render(holder,{
    sitekey:config.turnstileSiteKey,
+   size:'flexible',
    theme:'auto',
    'expired-callback':()=>showFormMessage(form,'Ο έλεγχος ασφαλείας έληξε. Επαληθεύστε ξανά.'),
    'error-callback':()=>showFormMessage(form,'Δεν ολοκληρώθηκε ο έλεγχος ασφαλείας. Δοκιμάστε ξανά.')
