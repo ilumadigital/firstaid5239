@@ -1,5 +1,6 @@
 'use strict';
 const httpsUrl='https://api.resend.com/emails/batch';
+const nodemailer=require('nodemailer');
 const clean=(v,max=200)=>typeof v==='string'?v.trim().slice(0,max):'';
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const isEmail=e=>e.length<=254&&/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(e)&&!/[^\x20-\x7e]/.test(e);
@@ -29,7 +30,12 @@ module.exports=async function contact(req,res){
  const apiKey=process.env.RESEND_API_KEY;
  const from=process.env.MAIL_FROM;
  const to=process.env.MAIL_TO||'info@enak.gr';
- if(!apiKey||!from)return success(res,503,{ok:false,message:'Η αποστολή email δεν έχει ακόμη ενεργοποιηθεί. Επικοινωνήστε στο info@enak.gr ή 210 9575 470.'});
+ const smtpUser=process.env.SMTP_USER;
+ const smtpPassword=process.env.SMTP_PASSWORD;
+ const smtpHost=process.env.SMTP_HOST||'smtp.hostinger.com';
+ const smtpPort=Number(process.env.SMTP_PORT||465);
+ const smtpReady=Boolean(smtpUser&&smtpPassword);
+ if(!smtpReady&&(!apiKey||!from))return success(res,503,{ok:false,message:'Η αποστολή email δεν έχει ακόμη ενεργοποιηθεί. Επικοινωνήστε στο info@enak.gr ή 210 9575 470.'});
  const subject='Νέο αίτημα Ν. 5239/2025 | '+fields.company;
  const entries=[['Επωνυμία',fields.company],['Ονοματεπώνυμο',fields.name],['Θέση',fields.role],['Email',fields.email],['Τηλέφωνο',fields.phone],['Πόλη',fields.city],['Εργαζόμενοι / εγκατάσταση',fields.employees],['Πρόγραμμα',fields.program],['Σχόλια',fields.message]];
  const adminBody='<p>Νέο αίτημα προσφοράς από το <strong>firstaid5239.gr</strong>.</p><table style="width:100%;border-collapse:collapse">'+entries.map(([k,v])=>line(k,v)).join('')+'</table><p style="font-size:12px;color:#72828b">Ο αποστολέας ενημερώθηκε για την Πολιτική Απορρήτου. Απαντήστε στο email του ενδιαφερόμενου.</p>';
@@ -40,6 +46,34 @@ module.exports=async function contact(req,res){
   {from,to:[to],reply_to:fields.email,subject,html:htmlLayout('Νέο αίτημα εκπαίδευσης',adminBody),text:adminText},
   {from,to:[fields.email],reply_to:to,subject:'Επιβεβαίωση αιτήματος | ΕΝΑΚ – Ν. 5239/2025',html:htmlLayout('Σας ευχαριστούμε για την επικοινωνία σας',clientBody),text:clientText}
  ];
+ if(smtpReady){
+  if(!Number.isInteger(smtpPort)||smtpPort<1||smtpPort>65535)return success(res,503,{ok:false,message:'Η αποστολή email δεν έχει ρυθμιστεί σωστά.'});
+  const sender=process.env.MAIL_FROM||smtpUser;
+  const transporter=nodemailer.createTransport({
+   host:smtpHost,port:smtpPort,secure:smtpPort===465,
+   auth:{user:smtpUser,pass:smtpPassword},
+   connectionTimeout:10000,greetingTimeout:10000,socketTimeout:15000
+  });
+  try{
+   await transporter.sendMail({
+    from:sender,to,replyTo:fields.email,subject,
+    html:emails[0].html,text:adminText
+   });
+   try{
+    await transporter.sendMail({
+     from:sender,to:fields.email,replyTo:to,subject:emails[1].subject,
+     html:emails[1].html,text:clientText
+    });
+   }catch(err){
+    console.error('SMTP confirmation email failed:',err.code||err.name);
+    return success(res,502,{ok:false,message:'Το αίτημα στάλθηκε στην ΕΝΑΚ, αλλά δεν ήταν δυνατή η αποστολή επιβεβαίωσης στο email σας. Μην υποβάλετε ξανά πριν επικοινωνήσετε με την ΕΝΑΚ.'});
+   }
+   return success(res,200,{ok:true,message:'Το αίτημα υποβλήθηκε και η επιβεβαίωση στάλθηκε για παράδοση.'});
+  }catch(err){
+   console.error('SMTP submission failed:',err.code||err.name);
+   return success(res,502,{ok:false,message:'Δεν ολοκληρώθηκε η αποστολή. Επικοινωνήστε στο info@enak.gr ή καλέστε στο 210 9575 470.'});
+  }finally{transporter.close();}
+ }
  try{
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),12000);
