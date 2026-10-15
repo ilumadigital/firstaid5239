@@ -1,6 +1,5 @@
 'use strict';
 const httpsUrl='https://api.resend.com/emails/batch';
-const nodemailer=require('nodemailer');
 const clean=(v,max=200)=>typeof v==='string'?v.trim().slice(0,max):'';
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const isEmail=e=>e.length<=254&&/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(e)&&!/[^\x20-\x7e]/.test(e);
@@ -49,6 +48,7 @@ module.exports=async function contact(req,res){
  if(smtpReady){
   if(!Number.isInteger(smtpPort)||smtpPort<1||smtpPort>65535)return success(res,503,{ok:false,message:'Η αποστολή email δεν έχει ρυθμιστεί σωστά.'});
   const sender=process.env.MAIL_FROM||smtpUser;
+  const nodemailer=require('nodemailer');
   const transporter=nodemailer.createTransport({
    host:smtpHost,port:smtpPort,secure:smtpPort===465,
    auth:{user:smtpUser,pass:smtpPassword},
