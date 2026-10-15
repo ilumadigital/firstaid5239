@@ -41,6 +41,18 @@ jobs:
           print('Official ENAK logo verified:',len(logo),'bytes')
           PY
 
+      - name: Setup PHP for Hostinger API syntax checks
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Lint PHP forms and Turnstile endpoints
+        run: |
+          php -l public/api/_bootstrap.php
+          php -l public/api/config.php
+          php -l public/api/contact.php
+
       - name: Build static HTML and test site + email handler
         run: npm run check
 
@@ -59,7 +71,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           cp -R dist/. .
-          git add -- index.html styles.css sections.css mobile.css hero-form.css script.js enak-logo.png public/enak-logo.png favicon.svg og-cover.svg hero-art.svg privacy.html robots.txt sitemap.xml llms.txt llms-full.txt faq.md site.webmanifest
+          git add -- api/.htaccess api/_bootstrap.php api/config.php api/contact.php index.html styles.css sections.css mobile.css hero-form.css script.js enak-logo.png public/enak-logo.png favicon.svg og-cover.svg hero-art.svg privacy.html robots.txt sitemap.xml llms.txt llms-full.txt faq.md site.webmanifest
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
